@@ -1,0 +1,7 @@
+/root/*.vms
+/xen/*/
+/etc/xen/domU/domU_*
+/var/ovs/mount/*/running_pool/
+/OVS/running_pool/
+/xen_local/*/
+/OVS/Repositories/
