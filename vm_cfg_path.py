@@ -34,7 +34,7 @@ class XenView(object):
         self.debug = debug
 
         ''' Interim result '''
-        self.conf_path_list = []
+        self.conf_path_dict = {}
 
     ''' Only to print debugging information '''
     def _dprint(self, msg):
@@ -95,9 +95,8 @@ class XenView(object):
         return new_lines
 
     def _initialize_conf_list(self):
-        conf_path = '%s/conf/vm_cfg_path.config' % os.path.dirname(os.path.realpath(__file__))
-        dir_list = self._get_file_content(conf_path)
-        self.conf_path_list = ' '.join(dir_list)
+        conf_path = '%s/conf/vm_cfg_path.json' % os.path.dirname(os.path.realpath(__file__))
+        self.conf_path_dict = json.load(open(conf_path))
 
     def _get_domain_name_from_file(self, filename):
         if not os.path.isfile(filename):

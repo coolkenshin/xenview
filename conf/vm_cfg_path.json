@@ -1,0 +1,49 @@
+{
+    "vm_cfg_path_list": [
+        {
+            "description": "For FA SaaS",
+            "path_name": "/root/*.vms",
+            "effective": "True"
+        },
+        {
+            "description": "xendomains: /etc/xen/auto, usually symbolic link",
+            "path_name": "/etc/xen/auto/*",
+            "effective": "True"
+        },
+        {
+            "description": "PDIT EIS Managed VM",
+            "path_name": "/xen/*/vm.cfg",
+            "effective": "True"
+        },
+        {
+            "description": "PDIT DEV OVS 3.x",
+            "path_name": "/OVS/Repositories/*/VirtualMachines/*/vm.cfg",
+            "effective": "True"
+        },
+        {
+            "description": "PDIT DevOps Managed OVM 2.2 VM",
+            "path_name": "/etc/xen/domU/domU_*",
+            "effective": "True"
+        },
+        {
+            "description": "VM Manager 2.2 Managed VM",
+            "path_name": "/var/ovs/mount/*/running_pool/*/vm.cfg",
+            "effective": "True"
+        },
+        {
+            "description": "OVM Manager 2.1.x Managed VM",
+            "path_name": "/OVS/running_pool/*/vm.cfg",
+            "effective": "True"
+        },
+        {
+            "description": "PDIT A&P Managed VM in CDC Lab",
+            "path_name": "/xen_local/*/vm.cfg",
+            "effective": "True"
+        },
+        {
+            "description": "Based on the xenstore-ls, find the vm.cfg on same path as img file",
+            "path_name": "",
+            "effective": "True"
+        }
+    ]
+}
