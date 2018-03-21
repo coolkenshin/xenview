@@ -129,7 +129,17 @@ class XenView(object):
             self.vm_cfg_dict[domain_name] = vmcfg_path
             
     
-    ''' Case 1: FA SaaS: /root/${hostname}.vms which used by /etc/rc.d/init.d/dom0init '''
+    def _generic_case_3478(self, path_regex):
+        file_list = glob.glob(path_regex)
+        for file_name in file_list:
+            domain_name_in_path = file_name.split('/')[-2]
+            domain_name_in_vm_cfg = self._get_domain_name_from_file(file_name)
+            if domain_name_in_path != domain_name_in_vm_cfg and not re.search('/%s_' % domain_name_in_vm_cfg, file_name):
+                self._dprint('Domain Name Mismatch: file_name: %s, domain_name_in_path: %s, domain_name_in_vm_cfg: %s' % (file_name, domain_name_in_path, domain_name_in_vm_cfg))
+                continue
+            self._update_vm_cfg_dict(domain_name_in_vm_cfg, file_name)
+        
+    ''' Case 1: FA SaaS: /root/${hostname}.vms which used by /etc/rc.d/init.d/dom0init (bejan09)'''
     def _case1(self):
         if not os.path.exists('/etc/rc.d/init.d/dom0init'):
             return
@@ -145,7 +155,7 @@ class XenView(object):
             domain_name_in_vm_cfg = self._get_domain_name_from_file(line)
             self._update_vm_cfg_dict(domain_name_in_vm_cfg, line)
 
-    ''' Case 2: xendomains: /etc/xen/auto, usually symbolic link'''
+    ''' Case 2: xendomains: /etc/xen/auto, usually symbolic link (slce17cn04)'''
     def _case2(self):
         path_regex = '/etc/xen/auto/*'
         file_list = glob.glob(path_regex)
@@ -163,24 +173,12 @@ class XenView(object):
     ''' Case 3: PDIT EIS Managed VM : '/xen/*/vm.cfg' (ubamx4060)'''
     def _case3(self):
         path_regex = '/xen/*/vm.cfg'
-        file_list = glob.glob(path_regex)
-        for file_name in file_list:
-            domain_name_in_path = file_name.split('/')[-2]
-            domain_name_in_vm_cfg = self._get_domain_name_from_file(file_name)
-            if domain_name_in_path != domain_name_in_vm_cfg:
-                continue
-            self._update_vm_cfg_dict(domain_name_in_vm_cfg, file_name)
+        self._generic_case_3478(path_regex)
 
     ''' Case 4: PDIT DEV OVS 3.x: /OVS/Repositories/3914FD9CE3E74C5D8A83BC8BE69764E5/VirtualMachines/bej312378/vm.cfg (bejaq30)'''
     def _case4(self):
         path_regex = '/OVS/Repositories/*/VirtualMachines/*/vm.cfg'
-        file_list = glob.glob(path_regex)
-        for file_name in file_list:
-            domain_name_in_path = file_name.split('/')[-2]
-            domain_name_in_vm_cfg = self._get_domain_name_from_file(file_name)
-            if domain_name_in_path != domain_name_in_vm_cfg:
-                continue
-            self._update_vm_cfg_dict(domain_name_in_vm_cfg, file_name)
+        self._generic_case_3478(path_regex)
 
     ''' Case 5: PDIT DevOps Managed OVM 2.2 VM: /etc/xen/domU/domU_*  (bej0201)'''
     def _case5(self):
@@ -216,26 +214,12 @@ class XenView(object):
     ''' Case 7: OVM Manager 2.1.x Managed domU: /OVS/running_pool/*/vm.cfg (fpclmd0009.uspp1.oraclecloud.com)'''
     def _case7(self):
         path_regex = '/OVS/running_pool/*/vm.cfg'
-        file_list = glob.glob(path_regex)
-        for file_name in file_list:
-            domain_name_in_path = file_name.split('/')[-2]
-            domain_name_in_vm_cfg = self._get_domain_name_from_file(file_name)
-            if domain_name_in_path != domain_name_in_vm_cfg and not re.search('/%s_' % domain_name_in_vm_cfg, file_name):
-                self._dprint('Domain Name Mismatch: file_name: %s, domain_name_in_path: %s, domain_name_in_vm_cfg: %s' % (file_name, domain_name_in_path, domain_name_in_vm_cfg))
-                continue
-            self._update_vm_cfg_dict(domain_name_in_vm_cfg, file_name)
+        self._generic_case_3478(path_regex)
 
     ''' Case 8: PDIT A&P Managed VM in CDC Lab: /xen_local/*/ (NOT TESTED DUE TO NO SYSTEM)'''
     def _case8(self):
         path_regex = '/xen_local/*/vm.cfg'
-        file_list = glob.glob(path_regex)
-        for file_name in file_list:
-            domain_name_in_path = file_name.split('/')[-2]
-            domain_name_in_vm_cfg = self._get_domain_name_from_file(file_name)
-            if domain_name_in_path != domain_name_in_vm_cfg and not re.search('/%s_' % domain_name_in_vm_cfg, domain_name_in_path):
-                self._dprint('Domain Name Mismatch: file_name: %s, domain_name_in_path: %s, domain_name_in_vm_cfg: %s' % (file_name, domain_name_in_path, domain_name_in_vm_cfg))
-                continue
-            self._update_vm_cfg_dict(domain_name_in_vm_cfg, file_name)
+        self._generic_case_3478(path_regex)
 
     ''' Case 9: Based on the xenstore-ls, find the vm.cfg on same path as img file '''
     def _case9(self):
