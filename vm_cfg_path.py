@@ -6,6 +6,7 @@ import glob
 import re
 import sys
 import socket
+import optparse
 from subprocess import Popen,PIPE
 
 class XenView(object):
@@ -24,7 +25,7 @@ class XenView(object):
             return self.code
 
     """ Class initializer """
-    def __init__(self, init_disk=False, debug=False):
+    def __init__(self, debug=False):
         ''' Final result with domu_id as key'''
         self.running_domu_name_dict = {}
         self.running_domu_disk_dict = {}
@@ -48,7 +49,9 @@ class XenView(object):
         else:
             cmd = self.DOCMD("xm list | grep -v Name")
         if cmd.code != 0:
-            error("Unable to get domU list")
+            print("ERROR: Unable to get domU list")
+            return
+
         for domu in cmd.out.splitlines():
             if "Domain-0" in domu:
                 continue
@@ -267,12 +270,21 @@ class XenView(object):
         vmcfg_dict = self.get_all_domu_name_2_vm_cfg_dict()
         domu_name_list = vmcfg_dict.keys()
         domu_name_list.sort()
+        self._dprint('===== Final Result: =====')
         for domu_name in domu_name_list:
             print('%s|%s' % (domu_name, vmcfg_dict[domu_name]))
 
+def parse_opts():
+    """Parse program options."""
+    parser = optparse.OptionParser(description='Generate pairs of Xen VM name and configuration file path')
+    parser.add_option('-d', '--debug', help='Turn on debug information', action='store_true', dest='debug', default=False)
+    (opts, args) = parser.parse_args()
+    return (opts, args)
+
+    
 def main():
-    xv = XenView(debug=False)
-    xv._dprint('===== Final Result: =====')
+    (opts, args) = parse_opts()
+    xv = XenView(opts.debug)
     xv.get_all_domu_name_2_vm_cfg_report()
 
 if __name__ == '__main__':
