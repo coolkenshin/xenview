@@ -1,0 +1,59 @@
+{
+  "vm_cfg_path_list": [
+    {
+      "path_pattern": "/root/{DOM0_HOSTNAME}.vms",
+      "type": "list",
+      "enable": "True",
+      "description": "FA SaaS: file used to auto-start Xen guests on boot via dom0init (/etc/rc.d/init.d/dom0init)"
+    },
+    {
+      "path_pattern": "/etc/xen/auto/{DOMU_HOSTNAME}",
+      "type": "vmcfg",
+      "enable": "True",
+      "description": "OVMS: file used to auto-start Xen guests on boot via xendomains"
+    },
+    {
+      "path_pattern": "/xen/{DOMU_HOSTNAME}/vm.cfg",
+      "type": "vmcfg",
+      "enable": "True",
+      "description": "PEO EIS: vm.cfg file on OSCC OVMS22 without OVMM"
+    },
+    {
+      "path_pattern": "/OVS/Repositories/*/VirtualMachines/{DOMU_HOSTNAME}/vm.cfg",
+      "type": "vmcfg",
+      "enable": "True",
+      "description": "PEO DIS: vm.cfg file on OVMS32 which managed by http://devops.oraclecorp.com"
+    },
+    {
+      "path_pattern": "/etc/xen/domU/domU_{DOMU_HOSTNAME}",
+      "type": "vmcfg",
+      "enable": "True",
+      "description": "PEO DIS: configuration name pattern on OVMS22 which managed by http://devops.oraclecorp.com"
+    },
+    {
+      "path_pattern": "/var/ovs/mount/*/running_pool/{DOMU_HOSTNAME}/vm.cfg",
+      "type": "vmcfg",
+      "enable": "True",
+      "description": "vm configuration name pattern on OVMS22 with managed by VM Manager 2.2"
+    },
+    {
+      "path_pattern": "/OVS/running_pool/{DOMU_HOSTNAME}/vm.cfg",
+      "type": "vmcfg",
+      "enable": "True",
+      "description": "vm configuration name pattern on OVMS21 with managed by VM Manager 2.1"
+    },
+    {
+      "path_pattern": "/xen_local/{DOMU_HOSTNAME}/vm.cfg",
+      "type": "vmcfg",
+      "enable": "True",
+      "description": "PDIT A&P Managed VM in CDC Lab"
+    },
+    {
+      "path_pattern": "{IMG_FILE_DIR}/vm.cfg",
+      "type": "xenstore",
+      "enable": "True",
+      "description": "Based on the xenstore-ls, find the vm.cfg on same path as img file (in same folder)"
+    }
+  ]
+}
+
